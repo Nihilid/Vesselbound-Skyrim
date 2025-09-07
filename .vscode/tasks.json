@@ -10,10 +10,10 @@
         "-nocache",
         "-i",
         "C:/Users/Makron/AppData/Roaming/Vortex/skyrimse/mods/Vesselbound/scripts/source",
+        "-i",
+        "C:/Users/Makron/AppData/Roaming/Vortex/skyrimse/mods/Vesselbound/scripts/source/stubs",
         "-h",
         "C:/Steam/steamapps/common/Skyrim Special Edition/Data/Scripts/Source",
-        "-h",
-        "D:/Skyrim Mod Tools/SkyUI/Stubs",
         "-o",
         "C:/Users/Makron/AppData/Roaming/Vortex/skyrimse/mods/Vesselbound/scripts"
       ],

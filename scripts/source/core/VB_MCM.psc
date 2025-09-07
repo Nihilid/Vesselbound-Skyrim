@@ -1,21 +1,17 @@
 ; ==============================
-; Vesselbound — Core: MCM
-; File: source/core/mcm.psc
-; Notes: SkyUI MCM script for Vesselbound.
-; Provides settings UI and integration toggles.
+; Vesselbound — Core: MCM (read-only)
+; File: scripts/source/core/mcm.psc
+; Notes: Displays current settings. Uses stub API (no IDs).
 ; ==============================
 
 Scriptname VB_MCM Extends SKI_ConfigBase
 
-
 VB_Storage Property S Auto
-
 
 Int pageGeneral
 Int pageOIO
 Int pageWomb
 Int pageParasites
-
 
 Event OnConfigInit()
     ModName = "Vesselbound"
@@ -25,8 +21,12 @@ Event OnConfigInit()
     pageParasites = AddPage("Parasites")
 EndEvent
 
-
 Event OnPageReset(String page)
+    if S == None
+        AddToggleOption("Storage not bound", False)
+        return
+    endif
+
     if page == "General"
         AddToggleOption("Debug Logging", VB_Debug.IsEnabled())
 
