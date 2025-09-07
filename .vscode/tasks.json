@@ -8,24 +8,18 @@
       "args": [
         "compile",
         "-nocache",
-        "-i",
-        "C:/Users/Makron/AppData/Roaming/Vortex/skyrimse/mods/Vesselbound/scripts/source",
-        "-i",
-        "C:/Steam/steamapps/common/Skyrim Special Edition/Data/Scripts/Source",
-        "-i",
-        "D:/Skyrim Mod Tools/SKYUI/Source",
-        "-i",
-        "D:/Skyrim Mod Tools/SKYUI/Headers",
-        "-o",
-        "C:/Users/Makron/AppData/Roaming/Vortex/skyrimse/mods/Vesselbound/scripts",
-        "-h",
-        "C:/Steam/steamapps/common/Skyrim Special Edition/Data/Scripts/Source"
+
+        // COMPILE ONLY THESE: your mod sources
+        "-i", "C:/Users/Makron/AppData/Roaming/Vortex/skyrimse/mods/Vesselbound/scripts/source",
+
+        // HEADERS ONLY (do NOT compile)
+        "-h", "C:/Steam/steamapps/common/Skyrim Special Edition/Data/Scripts/Source",
+        "-h", "D:/Skyrim Mod Tools/SkyUI-Stubs",
+
+        // Output folder for .pex
+        "-o", "C:/Users/Makron/AppData/Roaming/Vortex/skyrimse/mods/Vesselbound/scripts"
       ],
-      "problemMatcher": [],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
+      "problemMatcher": []
     }
   ]
 }

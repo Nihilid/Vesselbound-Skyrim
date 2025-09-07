@@ -1,8 +1,8 @@
 ; ==============================
 ; Vesselbound — Core: Storage
-; File: source/core/storage.psc
-; Notes: Quest-backed persistent storage for Vesselbound.
-;        Holds capability flags, settings, and scene state.
+; File: scripts/source/core/storage.psc
+; Notes: Holds capability flags, settings, and scene state.
+;        Womb access uses fixed-capacity arrays (literal sizes only).
 ; ==============================
 
 Scriptname VB_Storage Extends Quest
@@ -36,9 +36,13 @@ Float Property ParasiteResistDifficulty Auto
 Float Property ParasiteResistSuccessReduction Auto
 Bool  Property ParasiteOrgasmTriggersOIO Auto
 
-; Scene-scoped ephemeral flags
+; Scene-scoped fixed-capacity arrays (literal sizes to satisfy strict compilers)
 String[] wombKeys
 Float[]  wombTTL
+
+; Capacity constants (adjust and recompile if you ever need more)
+; NOTE: must be literals where used with 'new'
+Int Property WombMaxSlots Auto
 
 Event OnInit()
     ; --- capability detection ---
@@ -51,13 +55,12 @@ Event OnInit()
     HasSUM        = (Game.GetFormFromFile(0x000800, "Skyrim - Utility Mod.esm") != None)
     HasParasites  = (Game.GetFormFromFile(0x000800, "SexLab-Parasites.esp") != None)
 
-    ; --- logging (must be INSIDE the event, not top-level) ---
     VB_Debug.Log("Storage init — Capabilities:")
     VB_Debug.Log("  SLO=" + HasSLO + " SLSO=" + HasSLSO + " SLATE=" + HasSLATE)
     VB_Debug.Log("  ODF=" + HasODF + " FISS=" + HasFISS + " MCMH=" + HasMCMHelper)
     VB_Debug.Log("  SUM=" + HasSUM + " Parasites=" + HasParasites)
 
-    ; --- defaults ---
+    ; defaults
     if OIOBaseChance <= 0.0
         OIOEnabled = True
         OIOBaseChance = 0.15
@@ -65,6 +68,14 @@ Event OnInit()
         OIOInstantFertEnabled = True
         OIORequireWombPenetration = False
         OIOArousalWeight = 0.50
+    endif
+
+    ; fixed allocations — use literal sizes to avoid compiler restrictions
+    if wombKeys == None
+        wombKeys = new String[64] ; <— increase and recompile if needed
+    endif
+    if wombTTL == None
+        wombTTL = new Float[64]  ; <— must match wombKeys length
     endif
 EndEvent
 
@@ -74,14 +85,18 @@ Function SetWombAccessWindow(Actor akVictim, Float hours)
     endif
     String key = akVictim.GetFormID() as String
     Float expiry = Utility.GetCurrentGameTime() + (hours / 24.0)
+
     Int idx = FindKeyIndex(key)
     if idx < 0
-        wombKeys = VB_ArrayUtil.PushString(wombKeys, key)
-        wombTTL  = VB_ArrayUtil.PushFloat(wombTTL,  expiry)
-    else
-        wombTTL[idx] = expiry
+        idx = FindFreeIndex()
+        if idx < 0
+            VB_Debug.Warn("[WombAccess] No free slot; increase array size in storage.psc and recompile.")
+            return
+        endif
+        wombKeys[idx] = key
     endif
-    VB_Debug.Log("WombAccess set for " + akVictim + " for " + hours + "h")
+    wombTTL[idx] = expiry
+    VB_Debug.Log("WombAccess set for " + akVictim + " for " + hours + "h (slot " + idx + ")")
 EndFunction
 
 Bool Function HasWombAccess(Actor akVictim)
@@ -97,12 +112,29 @@ Bool Function HasWombAccess(Actor akVictim)
 EndFunction
 
 Int Function FindKeyIndex(String key)
+    if key == "" || wombKeys == None
+        return -1
+    endif
+    Int i = 0
+    Int n = wombKeys.Length
+    while i < n
+        if wombKeys[i] == key
+            return i
+        endif
+        i += 1
+    endwhile
+    return -1
+EndFunction
+
+Int Function FindFreeIndex()
     if wombKeys == None
         return -1
     endif
     Int i = 0
-    while i < wombKeys.Length
-        if wombKeys[i] == key
+    Int n = wombKeys.Length
+    Float now = Utility.GetCurrentGameTime()
+    while i < n
+        if wombKeys[i] == "" || wombTTL[i] <= now
             return i
         endif
         i += 1
