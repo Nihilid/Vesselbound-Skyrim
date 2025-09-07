@@ -1,30 +1,5 @@
-; ===== source/bridge/odf_bridge.psc =====
-ScriptName VB_Bridge_ODF Hidden
+; ============================== ; Vesselbound — Bridge: ODF ; File: source/bridge/odf_bridge.psc ; Notes: Stub bridge for Overlay Distribution Framework. ; Provides overlay application for Blessing of Burdens. ; ==============================
 
+Scriptname VB_Bridge_ODF Hidden
 
-Function ApplyBlessingOverlay(Actor a) Global
-; TODO: use ODF to add Blessing of Burdens overlay
-EndFunction
-
-
-; ===== source/bridge/fiss_bridge.psc =====
-ScriptName VB_Bridge_FISS Hidden
-
-
-Function ExportPreset() Global
-; TODO: FISS write implementation
-EndFunction
-
-
-Function ImportPreset() Global
-; TODO: FISS read implementation
-EndFunction
-
-
-; ===== source/bridge/sum_bridge.psc =====
-ScriptName VB_Bridge_SUM Hidden
-
-
-Float Function Rand01() Global
-return Utility.RandomFloat(0.0, 1.0)
-EndFunction
+Function ApplyBlessingOverlay(Actor a) Global ; TODO: use ODF API to add Blessing of Burdens overlay to actor Debug.Trace("[Vesselbound][ODF] ApplyBlessingOverlay called (stub)") EndFunction
