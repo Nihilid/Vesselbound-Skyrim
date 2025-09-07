@@ -28,7 +28,6 @@ EndEvent
 
 Event OnPageReset(String page)
 if page == "General"
-elseif page == "General"
     AddToggleOption("Debug Logging", VB_Debug.IsEnabled())
 elseif page == "OIO"
 AddToggleOption("Enable OIO", S.OIOEnabled)
