@@ -8,20 +8,12 @@
       "args": [
         "compile",
         "-nocache",
-        "-i",
-        "C:/Users/Makron/AppData/Roaming/Vortex/skyrimse/mods/Vesselbound/data/scripts/source",
-        "-i",
-        "C:/Steam/steamapps/common/Skyrim Special Edition/Data/Scripts/Source",
-        "-o",
-        "C:/Users/Makron/AppData/Roaming/Vortex/skyrimse/mods/Vesselbound/data/scripts",
-        "-h",
-        "C:/Steam/steamapps/common/Skyrim Special Edition/Data/Scripts/Source"
+        "-i", "C:/Users/Makron/AppData/Roaming/Vortex/skyrimse/mods/Vesselbound/data/scripts/source",
+        "-i", "C:/Steam/steamapps/common/Skyrim Special Edition/Data/Scripts/Source",
+        "-o", "C:/Users/Makron/AppData/Roaming/Vortex/skyrimse/mods/Vesselbound/data/scripts",
+        "-h", "C:/Steam/steamapps/common/Skyrim Special Edition/Data/Scripts/Source"
       ],
-      "problemMatcher": [],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
+      "problemMatcher": []
     }
   ]
 }

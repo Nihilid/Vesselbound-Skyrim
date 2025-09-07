@@ -1,7 +1,7 @@
 {
-  "output": "Data\\Scripts",
+  "output": "\Scripts",
   "importDirs": [
-    "Data\\Scripts\\Source",
+    "Scripts\\Source",
     "src",
     "src\\vesselbound",
     "src\\compat",
