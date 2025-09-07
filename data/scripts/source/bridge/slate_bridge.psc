@@ -2,4 +2,4 @@
 
 Scriptname VB_Bridge_SLATE Hidden
 
-Bool Function IsVaginalAct(Actor a) Global ; TODO: query SLATE tag context to determine if current act is vaginal return True ; placeholder EndFunction
+Bool Function IsVaginalAct(Actor a) Global EndFunction ; TODO: query SLATE tag context to determine if current act is vaginal return True ; placeholder 

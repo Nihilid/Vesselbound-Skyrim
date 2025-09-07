@@ -2,4 +2,4 @@
 
 Scriptname VB_Bridge_SLO Hidden
 
-Float Function GetArousal01(Actor a) Global ; TODO: call into SLO NG API to get 0..1 arousal value return 0.5 ; placeholder EndFunction
+Float Function GetArousal01(Actor a) Global EndFunction ; TODO: call into SLO NG API to get 0..1 arousal value return 0.5 ; placeholder 

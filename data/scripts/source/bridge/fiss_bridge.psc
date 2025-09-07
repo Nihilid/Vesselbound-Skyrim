@@ -2,6 +2,12 @@
 
 Scriptname VB_Bridge_FISS Hidden
 
-Function ExportPreset() Global ; TODO: implement FISS write logic Debug.Trace("[Vesselbound][FISS] ExportPreset called (stub)") EndFunction
+Function ExportPreset() Global
+    ; TODO: implement FISS write logic
+    Debug.Trace("[Vesselbound][FISS] ExportPreset called (stub)")
+EndFunction
 
-Function ImportPreset() Global ; TODO: implement FISS read logic Debug.Trace("[Vesselbound][FISS] ImportPreset called (stub)") EndFunction
+Function ImportPreset() Global
+    ; TODO: implement FISS read logic
+    Debug.Trace("[Vesselbound][FISS] ImportPreset called (stub)")
+EndFunction

@@ -2,4 +2,4 @@
 
 Scriptname VB_Bridge_ODF Hidden
 
-Function ApplyBlessingOverlay(Actor a) Global ; TODO: use ODF API to add Blessing of Burdens overlay to actor Debug.Trace("[Vesselbound][ODF] ApplyBlessingOverlay called (stub)") EndFunction
+Function ApplyBlessingOverlay(Actor a) Global EndFunction ; TODO: use ODF API to add Blessing of Burdens overlay to actor Debug.Trace("[Vesselbound][ODF] ApplyBlessingOverlay called (stub)") 
