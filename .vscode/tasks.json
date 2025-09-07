@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Papyrus: Compile Vesselbound",
+      "type": "process",
+      "command": "D:/Skyrim Mod Tools/papyrus-compiler/PapyrusCompiler.exe",
+      "args": [
+        "compile",
+        "C:/Users/Makron/AppData/Roaming/Vortex/skyrimse/mods/Vesselbound/data/scripts/source",
+        "-i=C:/Steam/steamapps/common/Skyrim Special Edition/Data/Scripts/Source",
+        "-o=C:/Users/Makron/AppData/Roaming/Vortex/skyrimse/mods/Vesselbound/data/scripts",
+        "-h=C:/Steam/steamapps/common/Skyrim Special Edition/Data/Scripts/Source",
+        "-f=C:/Steam/steamapps/common/Skyrim Special Edition/Data/Scripts/Source/TESV_Papyrus_Flags.flg",
+        "-optimize",
+        "-all"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "output": "Data\\Scripts",
+  "importDirs": [
+    "Data\\Scripts\\Source",
+    "src",
+    "src\\vesselbound",
+    "src\\compat",
+    "external\\fertilitymodeplus"
+  ],
+  "flagsFile": "Data\\Scripts\\Source\\TESV_Papyrus_Flags.flg",
+  "optimize": false
+}
