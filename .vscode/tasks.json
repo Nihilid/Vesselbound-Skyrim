@@ -16,7 +16,7 @@
         "-h", "C:/Steam/steamapps/common/Skyrim Special Edition/Data/Scripts/Source",
 
         // Output PEX here
-        "-o", "C:/Users/Makron/AppData/Roaming/Vortex/skyrimse/mods/Vesselbound/scripts"
+        "-o", "C:/Steam/steamapps/common/Skyrim Special Edition/Data/Scripts"
       ],
       "problemMatcher": [],
       "group": { "kind": "build", "isDefault": true }

@@ -8,6 +8,8 @@ Scriptname VB_Events Extends Quest
 
 VB_Storage Property S Auto
 
+Import SKSE_Events
+
 ; SexLab/SLSO detection flags cached on init for clarity
 Bool hasSLSO
 Bool hasSLO
