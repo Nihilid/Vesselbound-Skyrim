@@ -1,1 +1,0 @@
-﻿Scriptname _JSW_BB_FertilityEffect extends ActiveMagicEffect
