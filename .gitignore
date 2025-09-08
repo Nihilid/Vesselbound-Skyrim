@@ -1,2 +1,3 @@
 /scripts/*.pex
 /scripts/**/*.pex
+/.vscode/
