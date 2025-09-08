@@ -1,3 +1,5 @@
 /scripts/*.pex
 /scripts/**/*.pex
 /.vscode/
+vesselbound.ppj
+SkyrimSE.code-workspace
