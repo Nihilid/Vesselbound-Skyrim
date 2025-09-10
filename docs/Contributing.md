@@ -1,9 +1,3 @@
-# Contributing to Vesselbound
-
-## Project Goals
-Vesselbound is a Skyrim SE/AE mod implementing the "Vesselbound" fertility/arousal formula.  
-It integrates with Fertility Mode Plus (Baka Edition), SexLab P+, Fill Her Up (Baka), SLA Aroused NG, Creature Framework, Milk Mod Economy, Stress & Fear, Slavetats, and other adult framework mods.
-
 The project’s guiding principles:
 - **Performance-safe**: event-driven, minimal polling.
 - **Modular**: compatibility layers instead of patching external mods directly.
@@ -21,3 +15,4 @@ The project’s guiding principles:
 ---
 
 ## Repo Layout
+

@@ -1,6 +1,6 @@
 # Vesselbound — Design Plan (v0.2)
 
-A Skyrim SE/AE gameplay extension focused on advanced fertility, ovulation, pregnancy, pleasure, and integration across the SexLab ecosystem. This doc is the working design spec to commit to GitHub.
+A Skyrim SE/AE mod. This doc is the working design spec to commit to GitHub.
 
 > **Scope note**: Vesselbound augments existing mods (FM+, FHU, SexLab P+, etc.). Where possible, it patches or extends through events, MCM settings, and soft dependencies to avoid hard conflicts.
 
@@ -234,3 +234,4 @@ Vesselbound/
 - **feat(doc): update Vesselbound DESIGN spec v0.2** — adds framework detection (SLO, SLSO, SLATE, ODF, FISS, MCM Helper, SUM, Acheron, Dynamic Persistent Forms), clarifies integration hooks, MCM preset export, and Phase 1 goals.
 
 **Next Up**: finalize Phase 1 implementation with MCM Helper bindings, FISS presets, and Debug page wiring.
+
