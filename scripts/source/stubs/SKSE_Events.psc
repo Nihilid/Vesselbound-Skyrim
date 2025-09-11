@@ -1,8 +1,3 @@
-; ==============================
-; Stub: SKSE Mod Event Functions
-; Provides compile-time signatures for SKSE natives.
-; ==============================
-
 Scriptname SKSE_Events Hidden
 
 ; Stub signatures — no implementation, the real ones are native

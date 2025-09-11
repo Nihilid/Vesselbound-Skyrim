@@ -1,9 +1,3 @@
-; ==============================
-; Vesselbound — Core: MCM (read-only)
-; File: scripts/source/core/mcm.psc
-; Notes: Displays current settings. Uses stub API (no IDs).
-; ==============================
-
 Scriptname VB_MCM Extends SKI_ConfigBase
 
 VB_Storage Property S Auto

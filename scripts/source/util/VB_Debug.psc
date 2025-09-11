@@ -1,9 +1,3 @@
-; ==============================
-; Vesselbound — Util: Debug
-; File: source/util/debug.psc
-; Notes: Provides logging helpers for Vesselbound scripts.
-; ==============================
-
 Scriptname VB_Debug Hidden
 
 Bool _enabled = True

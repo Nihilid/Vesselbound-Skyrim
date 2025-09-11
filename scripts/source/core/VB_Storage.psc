@@ -1,10 +1,3 @@
-; ==============================
-; Vesselbound — Core: Storage
-; File: scripts/source/core/storage.psc
-; Notes: Holds capability flags, settings, and scene state.
-;        Womb access uses fixed-capacity arrays (literal sizes only).
-; ==============================
-
 Scriptname VB_Storage Extends Quest
 
 ; Capability flags

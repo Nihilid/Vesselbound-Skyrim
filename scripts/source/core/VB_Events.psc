@@ -1,9 +1,3 @@
-; ==============================
-; Vesselbound — Core: Events
-; File: scripts/source/core/events.psc
-; Notes: Minimal event hub. Wires orgasm → OIO, registers where safe.
-; ==============================
-
 Scriptname VB_Events Extends Quest
 
 VB_Storage Property S Auto

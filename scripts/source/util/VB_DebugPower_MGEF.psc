@@ -1,9 +1,3 @@
-; ==============================
-; Vesselbound — Debug Power (MGEF)
-; File: scripts/source/magic/VB_DebugPower_MGEF.psc
-; Notes: Cast the power to log capabilities + current settings.
-; ==============================
-
 Scriptname VB_DebugPower_MGEF Extends ActiveMagicEffect
 
 VB_Storage Property S Auto
