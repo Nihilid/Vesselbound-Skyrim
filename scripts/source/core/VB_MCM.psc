@@ -1,4 +1,4 @@
-Scriptname VB_MCM Extends SKI_ConfigBase
+ScriptName VB_MCM Extends SKI_ConfigBase
 
 VB_Storage Property S Auto
 

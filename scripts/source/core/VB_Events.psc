@@ -1,4 +1,4 @@
-Scriptname VB_Events Extends Quest
+ScriptName VB_Events Extends Quest
 
 VB_Storage Property S Auto
 

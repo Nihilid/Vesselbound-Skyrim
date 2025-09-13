@@ -1,4 +1,4 @@
-Scriptname VB_Storage Extends Quest
+ScriptName VB_Storage Extends Quest
 
 ; Capability flags
 Bool Property HasSLO Auto
