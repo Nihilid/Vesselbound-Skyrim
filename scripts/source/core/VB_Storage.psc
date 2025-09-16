@@ -63,6 +63,69 @@ Event OnInit()
         OIOArousalWeight = 0.50
     endif
 
+        ; Climax Cascades defaults
+    if CascadeMaxCount <= 0
+        CascadeEnabled        = True
+        CascadeBaseChance     = 0.20
+        CascadeMaxCount       = 3
+        CascadeCooldownSec    = 2.0
+        CascadeArousalWeight  = 0.50
+    endif
+
+    ; === Climax Cascades (config) ===
+    Bool  Property CascadeEnabled       Auto
+    Float Property CascadeBaseChance    Auto  ; 0.0–1.0
+    Int   Property CascadeMaxCount      Auto  ; 1–10
+    Float Property CascadeCooldownSec   Auto  ; guard to avoid same-frame loops
+    Float Property CascadeArousalWeight Auto  ; 0–1 blend, reuse SLA if present
+
+    ; === Cascade guard ===
+    String[] cascadeKeys
+    Float[]  cascadeUntil
+
+    Function SetCascadeGuard(Actor a, Float seconds)
+        if a == None
+            return
+        endif
+        String k = a.GetFormID() as String
+        Float until = Utility.GetCurrentRealTime() + seconds
+        Int idx = FindCascadeKey(k)
+        if idx < 0
+        cascadeKeys   = VB_ArrayUtil.PushString(cascadeKeys, k)
+        cascadeUntil  = VB_ArrayUtil.PushFloat(cascadeUntil,  until)
+        else
+        cascadeUntil[idx] = until
+    endif
+    EndFunction
+
+Bool Function CascadeGuardActive(Actor a)
+    if a == None
+        return False
+    endif
+    String k = a.GetFormID() as String
+    Int idx = FindCascadeKey(k)
+    if idx < 0
+        return False
+    endif
+    return cascadeUntil[idx] > Utility.GetCurrentRealTime()
+EndFunction
+
+Int Function FindCascadeKey(String k)
+    if cascadeKeys == None
+        return -1
+    endif
+    Int i = 0
+    while i < cascadeKeys.Length
+        if cascadeKeys[i] == k
+            return i
+        endif
+        i += 1
+    endwhile
+    return -1
+EndFunction
+
+
+    
     ; fixed allocations — use literal sizes to avoid compiler restrictions
     if wombKeys == None
         wombKeys = new String[64] ; <— increase and recompile if needed

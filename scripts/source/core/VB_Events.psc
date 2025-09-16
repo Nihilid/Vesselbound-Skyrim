@@ -96,6 +96,25 @@ Function OIO_CreateOva(Actor a, Float hours)
     ; TODO: real token/overlay/parasite hookup here
 EndFunction
 
+Function OnActorOrgasm(Actor akVictim, Actor akPartner)
+    if !S.OIOEnabled || akVictim == None
+        ; we still allow cascades even if OIO disabled
+    endif
+
+    Float arousalMult = 1.0
+    if S.HasSLO
+        arousalMult = GetArousalMult(akVictim)
+    endif
+    Float p = VB_Math.Clamp(S.OIOBaseChance * arousalMult, 0.0, 1.0)
+    if VB_Math.Roll(p)
+        OIO_CreateOva(akVictim, S.OIODurationHours)
+    endif
+    TryInstantFertilize(akVictim, akPartner)
+
+    ; NEW: Climax Cascades
+    MaybeStartCascade(akVictim, akPartner)
+EndFunction
+
 Function TryInstantFertilize(Actor akVictim, Actor akPartner)
     if !S.OIOInstantFertEnabled || akVictim == None || akPartner == None
         return
@@ -118,6 +137,49 @@ Bool Function IsEjaculatingNow(Actor a)
     endif
     ; Without SLSO, we can’t reliably know — return False for safety
     return False
+EndFunction
+
+Function MaybeStartCascade(Actor akVictim, Actor akPartner)
+    if !S.CascadeEnabled || akVictim == None
+        return
+    endif
+    if S.CascadeGuardActive(akVictim)
+        return
+    endif
+
+    Float p = VB_Math.Clamp(S.CascadeBaseChance * GetCascadeRollMult(akVictim), 0.0, 1.0)
+    if !VB_Math.Roll(p)
+        return
+    endif
+
+    Int maxN = VB_Math.Clamp(S.CascadeMaxCount as Float, 1.0, 10.0) as Int
+    S.SetCascadeGuard(akVictim, S.CascadeCooldownSec)
+    TriggerCascade(akVictim, akPartner, maxN)
+EndFunction
+
+Function TriggerCascade(Actor akVictim, Actor akPartner, Int remaining)
+    if remaining <= 0 || akVictim == None
+        return
+    endif
+
+    VB_Debug.Log("[Cascade] forcing extra climax, left=" + remaining + " on " + akVictim)
+
+    ; Prefer SLSO if present, else fall back to SexLab / log only for now
+    if S.HasSLSO
+        ; SKSE_Events.SendModEvent("SLSO_OrgasmStart") ; TODO: pick correct API/event
+        ; SKSE_Events.SendModEvent("SLSO_OrgasmEnd")
+    else
+        ; TODO: SexLab: advance/force orgasm stage
+    endif
+
+    ; Stagger next attempt slightly to let frameworks tick
+    Utility.Wait(1.0)
+
+    Int next = remaining - 1
+    if next > 0
+        ; Optional: decay chance each hop later; for now just run the count
+        TriggerCascade(akVictim, akPartner, next)
+    endif
 EndFunction
 
 ; -------- Tiny math helpers (no external deps) --------
