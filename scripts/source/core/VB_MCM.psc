@@ -1,48 +1,115 @@
-ScriptName VB_MCM Extends SKI_ConfigBase
+Scriptname VB_MCM extends SKI_ConfigBase
 
-VB_Storage Property S Auto
+VB_Settings Property Settings Auto
 
-Int pageGeneral
-Int pageOIO
-Int pageWomb
-Int pageParasites
+Int _pageMain
 
+; ===== SkyUI lifecycle =====
 Event OnConfigInit()
-    ModName = "Vesselbound"
-    pageGeneral   = AddPage("General")
-    pageOIO       = AddPage("OIO")
-    pageWomb      = AddPage("Womb Access")
-    pageParasites = AddPage("Parasites")
+    PagesClear()
+    _pageMain = PagesAdd("Vesselbound")
 EndEvent
 
-Event OnPageReset(String page)
-    if S == None
-        AddToggleOption("Storage not bound", False)
+Event OnPageReset(String a_page)
+    If a_page == "Vesselbound"
+        BuildMain()
+    EndIf
+EndEvent
+
+; ===== UI Builders =====
+Function BuildMain()
+    If Settings == None
+        AddTextOption("warning", "Settings quest not linked!", "")
         return
-    endif
+    EndIf
 
-    if page == "General"
-        AddToggleOption("Debug Logging", VB_Debug.IsEnabled())
+    AddHeaderOption("Climax Cascades")
+    AddToggleOptionST("cc_enabled", "Enabled", Settings.CascadesEnabled)
+    AddSliderOptionST("cc_base", "Base Chance %", Settings.CascadesBaseChance, "{0}", 0, 100, 1)
+    AddSliderOptionST("cc_max",  "Max Cascades",  Settings.CascadesMax, "{0}", 1, 10, 1)
 
-    elseif page == "OIO"
-        AddToggleOption("Enable OIO", S.OIOEnabled)
-        AddSliderOption("Base Chance", S.OIOBaseChance, 0.0, 1.0)
-        AddSliderOption("Duration (hrs)", S.OIODurationHours, 1.0, 72.0)
-        AddToggleOption("Instant Fertilization", S.OIOInstantFertEnabled)
-        AddToggleOption("Require Womb Penetration", S.OIORequireWombPenetration)
-        AddSliderOption("Arousal Weight", S.OIOArousalWeight, 0.0, 1.0)
+    AddEmptyOption()
 
-    elseif page == "Womb Access"
-        AddSliderOption("Size Threshold", S.WombSizeThreshold, 0.0, 100.0)
-        AddSliderOption("Base Chance", S.WombAccessBaseChance, 0.0, 1.0)
-        AddSliderOption("Retry Bonus", S.WombAccessRetryBonus, 0.0, 1.0)
-        AddSliderOption("Pleasure Multiplier", S.WombAccessPleasureMult, 0.5, 3.0)
+    AddHeaderOption("OIO (Orgasm-Induced Ovulation)")
+    AddToggleOptionST("oio_enabled", "Enabled", Settings.OIOEnabled)
+    AddSliderOptionST("oio_base", "Base Chance %", Settings.OIOBaseChance, "{0}", 0, 100, 1)
+    AddToggleOptionST("oio_force", "Force Ovulation on Orgasm", Settings.OIOForceOvulation)
 
-    elseif page == "Parasites"
-        AddSliderOption("Pleasure Gain Rate", S.ParasitePleasureGainRate, 0.0, 5.0)
-        AddSliderOption("Resist Interval (s)", S.ParasiteResistInterval, 1.0, 120.0)
-        AddSliderOption("Resist Difficulty", S.ParasiteResistDifficulty, 0.0, 100.0)
-        AddSliderOption("Resist Success Reduction", S.ParasiteResistSuccessReduction, 0.0, 1.0)
-        AddToggleOption("Parasite Orgasms Trigger OIO", S.ParasiteOrgasmTriggersOIO)
-    endif
-EndEvent
+    AddEmptyOption()
+
+    AddHeaderOption("Debug / UX")
+    AddToggleOptionST("dbg", "Enable Logging", Settings.DebugEnabled)
+    AddToggleOptionST("toasts", "Show Notifications", Settings.NotificationsEnabled)
+EndFunction
+
+; ===== Setters (SkyUI stateful options) =====
+State cc_enabled
+    Event OnSelectST()
+        Settings.CascadesEnabled = !Settings.CascadesEnabled
+        SetToggleOptionValueST(Settings.CascadesEnabled)
+    EndEvent
+EndState
+
+State cc_base
+    Event OnSliderOpenST()
+        SetSliderDialogRange(0, 100)
+        SetSliderDialogDefaultValue(10)
+        SetSliderDialogStartValue(Settings.CascadesBaseChance)
+    EndEvent
+    Event OnSliderAcceptST(Float value)
+        Settings.CascadesBaseChance = value as Int
+        SetSliderOptionValueST(Settings.CascadesBaseChance, "{0}")
+    EndEvent
+EndState
+
+State cc_max
+    Event OnSliderOpenST()
+        SetSliderDialogRange(1, 10)
+        SetSliderDialogDefaultValue(3)
+        SetSliderDialogStartValue(Settings.CascadesMax)
+    EndEvent
+    Event OnSliderAcceptST(Float value)
+        Settings.CascadesMax = value as Int
+        SetSliderOptionValueST(Settings.CascadesMax, "{0}")
+    EndEvent
+EndState
+
+State oio_enabled
+    Event OnSelectST()
+        Settings.OIOEnabled = !Settings.OIOEnabled
+        SetToggleOptionValueST(Settings.OIOEnabled)
+    EndEvent
+EndState
+
+State oio_base
+    Event OnSliderOpenST()
+        SetSliderDialogRange(0, 100)
+        SetSliderDialogDefaultValue(25)
+        SetSliderDialogStartValue(Settings.OIOBaseChance)
+    EndEvent
+    Event OnSliderAcceptST(Float value)
+        Settings.OIOBaseChance = value as Int
+        SetSliderOptionValueST(Settings.OIOBaseChance, "{0}")
+    EndEvent
+EndState
+
+State oio_force
+    Event OnSelectST()
+        Settings.OIOForceOvulation = !Settings.OIOForceOvulation
+        SetToggleOptionValueST(Settings.OIOForceOvulation)
+    EndEvent
+EndState
+
+State dbg
+    Event OnSelectST()
+        Settings.DebugEnabled = !Settings.DebugEnabled
+        SetToggleOptionValueST(Settings.DebugEnabled)
+    EndEvent
+EndState
+
+State toasts
+    Event OnSelectST()
+        Settings.NotificationsEnabled = !Settings.NotificationsEnabled
+        SetToggleOptionValueST(Settings.NotificationsEnabled)
+    EndEvent
+EndState
