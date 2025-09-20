@@ -3,35 +3,40 @@ Scriptname VB_Storage extends Quest
 ; ================================
 ; Vesselbound – Central Settings
 ; ================================
-; Notes:
-; - No trailing comments after Property lines (Papyrus parser limitation).
-; - Float chances are stored 0.0–1.0. Use the getters below to clamp.
 
 ; ---------- Feature Toggles ----------
-Bool Property OIOEnabled = True Auto
-Bool Property CascadeEnabled = True Auto
+Bool  Property OIOEnabled           = True  Auto
+Bool  Property CascadeEnabled       = True  Auto
 
 ; ---------- OIO (Orgasm-Induced Ovulation) ----------
-; Chance to trigger OIO on orgasm (0.0–1.0)
-Float Property OIOBaseChance = 0.25 Auto
-; If true, force ovulation regardless of cycle checks
-Bool Property OIOForceOvulation = False Auto
+; Base chance 0.0–1.0
+Float Property OIOBaseChance        = 0.25  Auto
+; Force ovulation regardless of cycle checks
+Bool  Property OIOForceOvulation    = False Auto
+; Weight (0–1) for arousal influence (when SLO present)
+Float Property OIOArousalWeight     = 0.50  Auto
+; Duration of ovulation (hours)
+Float Property OIODurationHours     = 24.0  Auto
+; Instant fertilization gates
+Bool  Property OIOInstantFertEnabled      = False Auto
+Bool  Property OIORequireWombPenetration  = False Auto
+
+; External framework availability
+Bool  Property HasSLO               = False Auto
+Bool  Property HasSLSO              = False Auto
 
 ; ---------- Climax Cascades ----------
-; Base chance to start or continue a cascade (0.0–1.0)
-Float Property CascadeBaseChance = 0.10 Auto
-; Maximum number of additional orgasms (1–10)
-Int Property CascadeMaxCount = 3 Auto
-; Minimum delay between cascade hops (seconds)
-Float Property CascadeDelayMin = 1.5 Auto
-; Maximum delay between cascade hops (seconds)
-Float Property CascadeDelayMax = 3.0 Auto
+; Base chance 0.0–1.0
+Float Property CascadeBaseChance    = 0.10  Auto
+Int   Property CascadeMaxCount      = 3     Auto
+Float Property CascadeDelayMin      = 1.5   Auto
+Float Property CascadeDelayMax      = 3.0   Auto
+; Cooldown (seconds) per actor to prevent re-trigger spam
+Float Property CascadeCooldownSec   = 20.0  Auto
 
 ; ---------- Debug / UX ----------
-; Enable Papyrus logging for Vesselbound
-Bool Property DebugEnabled = True Auto
-; Show on-screen notifications
-Bool Property NotificationsEnabled = True Auto
+Bool  Property DebugEnabled         = True  Auto
+Bool  Property NotificationsEnabled = True  Auto
 
 ; ================================
 ; Helpers
@@ -55,6 +60,12 @@ Float Function ClampFloat(Float v, Float lo, Float hi)
     return v
 EndFunction
 
+Function Notify(String msg)
+    If NotificationsEnabled
+        Debug.Notification("[Vesselbound] " + msg)
+    EndIf
+EndFunction
+
 ; ----- Normalized getters (clamped) -----
 
 Float Function GetOIOBaseChance01()
@@ -69,44 +80,58 @@ Int Function GetCascadeMaxCount()
     return ClampInt(CascadeMaxCount, 1, 10)
 EndFunction
 
-Float Function GetCascadeDelayMin()
+Float Function GetCascadeDelayMinSafe()
     Float minV = CascadeDelayMin
     Float maxV = CascadeDelayMax
-    ; Ensure non-negative
     If maxV < 0.0
         maxV = 0.0
     EndIf
     If minV < 0.0
         minV = 0.0
     EndIf
-    ; Ensure Min <= Max
     If minV > maxV
         return maxV
     EndIf
     return minV
 EndFunction
 
-Float Function GetCascadeDelayMax()
+Float Function GetCascadeDelayMaxSafe()
     Float minV = CascadeDelayMin
     Float maxV = CascadeDelayMax
-    ; Ensure non-negative
     If maxV < 0.0
         maxV = 0.0
     EndIf
     If minV < 0.0
         minV = 0.0
     EndIf
-    ; Ensure Max >= Min
     If maxV < minV
         return minV
     EndIf
     return maxV
 EndFunction
 
-; ----- UX -----
+; ================================
+; Stubs expected by VB_Events
+; ================================
 
-Function Notify(String msg)
-    If NotificationsEnabled
-        Debug.Notification("[Vesselbound] " + msg)
-    EndIf
+; Return whether actor has womb access right now (placeholder)
+Bool Function HasWombAccess(Actor akVictim)
+    ; TODO: integrate real check (animation tags, equipment, etc.)
+    return True
+EndFunction
+
+; Return per-actor multiplier for cascade roll (1.0 default)
+Float Function GetCascadeRollMult(Actor akVictim)
+    ; TODO: integrate fatigue, perks, corruption, etc.
+    return 1.0
+EndFunction
+
+; Simple guard against repeated cascades within a cooldown window.
+; NOTE: For now this is a no-op to keep compile-time simple.
+Bool Function CascadeGuardActive(Actor akVictim)
+    return False
+EndFunction
+
+Function SetCascadeGuard(Actor akVictim, Float seconds)
+    ; TODO: implement with StorageUtil/Factions/ActiveEffects if desired
 EndFunction
