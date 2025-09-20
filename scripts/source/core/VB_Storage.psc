@@ -1,199 +1,97 @@
-ScriptName VB_Storage Extends Quest
+Scriptname VB_Storage extends Quest
 
-; Capability flags
-Bool Property HasSLO Auto
-Bool Property HasSLSO Auto
-Bool Property HasSLATE Auto
-Bool Property HasODF Auto
-Bool Property HasFISS Auto
-Bool Property HasMCMHelper Auto
-Bool Property HasSUM Auto
-Bool Property HasParasites Auto
+; ================================
+; Vesselbound – Central Settings
+; ================================
+; Notes:
+; - No trailing comments after Property lines (Papyrus parser limitation).
+; - Float chances are stored 0.0–1.0. Use the getters below to clamp.
 
-; Settings snapshot
-Bool  Property OIOEnabled Auto
-Float Property OIOBaseChance Auto
-Float Property OIODurationHours Auto
-Bool  Property OIOInstantFertEnabled Auto
-Bool  Property OIORequireWombPenetration Auto
-Float Property OIOArousalWeight Auto
+; ---------- Feature Toggles ----------
+Bool Property OIOEnabled = True Auto
+Bool Property CascadeEnabled = True Auto
 
-Float Property WombSizeThreshold Auto
-Float Property WombAccessBaseChance Auto
-Float Property WombAccessRetryBonus Auto
-Float Property WombAccessPleasureMult Auto
+; ---------- OIO (Orgasm-Induced Ovulation) ----------
+; Chance to trigger OIO on orgasm (0.0–1.0)
+Float Property OIOBaseChance = 0.25 Auto
+; If true, force ovulation regardless of cycle checks
+Bool Property OIOForceOvulation = False Auto
 
-Float Property ParasitePleasureGainRate Auto
-Float Property ParasiteResistInterval Auto
-Float Property ParasiteResistDifficulty Auto
-Float Property ParasiteResistSuccessReduction Auto
-Bool  Property ParasiteOrgasmTriggersOIO Auto
+; ---------- Climax Cascades ----------
+; Base chance to start or continue a cascade (0.0–1.0)
+Float Property CascadeBaseChance = 0.10 Auto
+; Maximum number of additional orgasms (1–10)
+Int Property CascadeMaxCount = 3 Auto
+; Minimum delay between cascade hops (seconds)
+Float Property CascadeDelayMin = 1.5 Auto
+; Maximum delay between cascade hops (seconds)
+Float Property CascadeDelayMax = 3.0 Auto
 
-; Scene-scoped fixed-capacity arrays (literal sizes to satisfy strict compilers)
-String[] wombKeys
-Float[]  wombTTL
+; ---------- Debug / UX ----------
+; Enable Papyrus logging for Vesselbound
+Bool Property DebugEnabled = True Auto
+; Show on-screen notifications
+Bool Property NotificationsEnabled = True Auto
 
-; Capacity constants (adjust and recompile if you ever need more)
-; NOTE: must be literals where used with 'new'
-Int Property WombMaxSlots Auto
+; ================================
+; Helpers
+; ================================
 
-Event OnInit()
-    ; --- capability detection ---
-    HasSLO        = (Game.GetFormFromFile(0x000800, "SexLabAroused.esm") != None)
-    HasSLSO       = (Game.GetFormFromFile(0x000800, "SLSO.esp") != None)
-    HasSLATE      = (Game.GetFormFromFile(0x000800, "SLATE.esp") != None)
-    HasODF        = (Game.GetFormFromFile(0x000800, "OverlayDistributionFramework.esp") != None)
-    HasFISS       = (Game.GetFormFromFile(0x000800, "FISS.esp") != None)
-    HasMCMHelper  = (Game.GetFormFromFile(0x000800, "MCMHelper.esp") != None)
-    HasSUM        = (Game.GetFormFromFile(0x000800, "Skyrim - Utility Mod.esm") != None)
-    HasParasites  = (Game.GetFormFromFile(0x000800, "SexLab-Parasites.esp") != None)
-
-    VB_Debug.Log("Storage init — Capabilities:")
-    VB_Debug.Log("  SLO=" + HasSLO + " SLSO=" + HasSLSO + " SLATE=" + HasSLATE)
-    VB_Debug.Log("  ODF=" + HasODF + " FISS=" + HasFISS + " MCMH=" + HasMCMHelper)
-    VB_Debug.Log("  SUM=" + HasSUM + " Parasites=" + HasParasites)
-
-    ; defaults
-    if OIOBaseChance <= 0.0
-        OIOEnabled = True
-        OIOBaseChance = 0.15
-        OIODurationHours = 24.0
-        OIOInstantFertEnabled = True
-        OIORequireWombPenetration = False
-        OIOArousalWeight = 0.50
-    endif
-
-        ; Climax Cascades defaults
-    if CascadeMaxCount <= 0
-        CascadeEnabled        = True
-        CascadeBaseChance     = 0.20
-        CascadeMaxCount       = 3
-        CascadeCooldownSec    = 2.0
-        CascadeArousalWeight  = 0.50
-    endif
-
-    ; === Climax Cascades (config) ===
-    Bool  Property CascadeEnabled       Auto
-    Float Property CascadeBaseChance    Auto  ; 0.0–1.0
-    Int   Property CascadeMaxCount      Auto  ; 1–10
-    Float Property CascadeCooldownSec   Auto  ; guard to avoid same-frame loops
-    Float Property CascadeArousalWeight Auto  ; 0–1 blend, reuse SLA if present
-
-    ; === Cascade guard ===
-    String[] cascadeKeys
-    Float[]  cascadeUntil
-
-    Function SetCascadeGuard(Actor a, Float seconds)
-        if a == None
-            return
-        endif
-        String k = a.GetFormID() as String
-        Float until = Utility.GetCurrentRealTime() + seconds
-        Int idx = FindCascadeKey(k)
-        if idx < 0
-        cascadeKeys   = VB_ArrayUtil.PushString(cascadeKeys, k)
-        cascadeUntil  = VB_ArrayUtil.PushFloat(cascadeUntil,  until)
-        else
-        cascadeUntil[idx] = until
-    endif
-    EndFunction
-
-Bool Function CascadeGuardActive(Actor a)
-    if a == None
-        return False
-    endif
-    String k = a.GetFormID() as String
-    Int idx = FindCascadeKey(k)
-    if idx < 0
-        return False
-    endif
-    return cascadeUntil[idx] > Utility.GetCurrentRealTime()
+Int Function ClampInt(Int v, Int lo, Int hi)
+    If v < lo
+        return lo
+    ElseIf v > hi
+        return hi
+    EndIf
+    return v
 EndFunction
 
-Int Function FindCascadeKey(String k)
-    if cascadeKeys == None
-        return -1
-    endif
-    Int i = 0
-    while i < cascadeKeys.Length
-        if cascadeKeys[i] == k
-            return i
-        endif
-        i += 1
-    endwhile
-    return -1
+Float Function ClampFloat(Float v, Float lo, Float hi)
+    If v < lo
+        return lo
+    ElseIf v > hi
+        return hi
+    EndIf
+    return v
 EndFunction
 
+; ----- Normalized getters (clamped) -----
 
-    
-    ; fixed allocations — use literal sizes to avoid compiler restrictions
-    if wombKeys == None
-        wombKeys = new String[64] ; <— increase and recompile if needed
-    endif
-    if wombTTL == None
-        wombTTL = new Float[64]  ; <— must match wombKeys length
-    endif
-EndEvent
-
-Function SetWombAccessWindow(Actor akVictim, Float hours)
-    if akVictim == None
-        return
-    endif
-    String key = akVictim.GetFormID() as String
-    Float expiry = Utility.GetCurrentGameTime() + (hours / 24.0)
-
-    Int idx = FindKeyIndex(key)
-    if idx < 0
-        idx = FindFreeIndex()
-        if idx < 0
-            VB_Debug.Warn("[WombAccess] No free slot; increase array size in storage.psc and recompile.")
-            return
-        endif
-        wombKeys[idx] = key
-    endif
-    wombTTL[idx] = expiry
-    VB_Debug.Log("WombAccess set for " + akVictim + " for " + hours + "h (slot " + idx + ")")
+Float Function GetOIOBaseChance01()
+    return ClampFloat(OIOBaseChance, 0.0, 1.0)
 EndFunction
 
-Bool Function HasWombAccess(Actor akVictim)
-    if akVictim == None
-        return False
-    endif
-    String key = akVictim.GetFormID() as String
-    Int idx = FindKeyIndex(key)
-    if idx < 0
-        return False
-    endif
-    return wombTTL[idx] > Utility.GetCurrentGameTime()
+Float Function GetCascadeBaseChance01()
+    return ClampFloat(CascadeBaseChance, 0.0, 1.0)
 EndFunction
 
-Int Function FindKeyIndex(String key)
-    if key == "" || wombKeys == None
-        return -1
-    endif
-    Int i = 0
-    Int n = wombKeys.Length
-    while i < n
-        if wombKeys[i] == key
-            return i
-        endif
-        i += 1
-    endwhile
-    return -1
+Int Function GetCascadeMaxCount()
+    return ClampInt(CascadeMaxCount, 1, 10)
 EndFunction
 
-Int Function FindFreeIndex()
-    if wombKeys == None
-        return -1
-    endif
-    Int i = 0
-    Int n = wombKeys.Length
-    Float now = Utility.GetCurrentGameTime()
-    while i < n
-        if wombKeys[i] == "" || wombTTL[i] <= now
-            return i
-        endif
-        i += 1
-    endwhile
-    return -1
+Float Function GetCascadeDelayMin()
+    ; Ensure Min <= Max
+    Float minV = CascadeDelayMin
+    Float maxV = CascadeDelayMax
+    If minV > maxV
+        return maxV
+    EndIf
+    return maxV >= 0.0 ? minV : 0.0
+EndFunction
+
+Float Function GetCascadeDelayMax()
+    Float minV = CascadeDelayMin
+    Float maxV = CascadeDelayMax
+    If maxV < minV
+        return minV
+    EndIf
+    return maxV >= 0.0 ? maxV : 0.0
+EndFunction
+
+; ----- UX -----
+
+Function Notify(String msg)
+    If NotificationsEnabled
+        Debug.Notification("[Vesselbound] " + msg)
+    EndIf
 EndFunction

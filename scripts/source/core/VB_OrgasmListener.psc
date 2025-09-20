@@ -1,32 +1,31 @@
 Scriptname VB_OrgasmListener extends Quest
 
-; SexLab
+; --- External frameworks ---
 SexLabFramework Property SexLab Auto
 
-; Dispatch
-VB_FeatureManager Property Manager Auto
+; --- Dispatch targets ---
+VB_FeatureManager Property Manager  Auto
 VB_Settings       Property Settings Auto
 
 Event OnInit()
-    ; Register for SexLab hook events (works via Mod Events)
-    RegisterForModEvent("HookOrgasmEnd", "OnSexLabHook")
-    RegisterForModEvent("HookOrgasmStart", "OnSexLabHookStart") ; optional if you ever want pre-end logic
+    ; SexLab orgasm hooks
+    RegisterForModEvent("HookOrgasmEnd",   "OnSexLabHook")
+    RegisterForModEvent("HookOrgasmStart", "OnSexLabHookStart")
+
+    ; Vesselbound ModEvent bridge (external mods can fire orgasms to us)
     RegisterForModEvent("Vesselbound_Orgasm", "OnVBOrgasm")
 
     If Settings
         VB_Log.Trace("Listener: Registered for SexLab orgasm hooks", Settings)
+        VB_Log.Trace("Listener: Registered for ModEvent 'Vesselbound_Orgasm'", Settings)
     Else
         Debug.Trace("[Vesselbound] Listener: Settings not set!", 2)
-
-    ; Optional: if you want a simple pair notification too (see notes below)
-    ; RegisterForModEvent("Vesselbound_OrgasmPair", "OnVBOrgasmPair")
-    If Settings
-    VB_Log.Trace("Listener: Registered for ModEvent 'Vesselbound_Orgasm'", Settings)
-EndIf
-
+    EndIf
 EndEvent
 
-; Called for HookOrgasmEnd
+; -------------------------------
+; SexLab: Orgasm End Hook handler
+; -------------------------------
 Function OnSexLabHook(String eventName, String argStr, Float argNum, Form sender)
     sslThreadController ctrl = sender as sslThreadController
     If ctrl == None
@@ -49,32 +48,26 @@ Function OnSexLabHook(String eventName, String argStr, Float argNum, Form sender
         If Settings
             VB_Log.Trace("Listener: Dispatched orgasm to " + actors.Length + " actor(s)", Settings)
         EndIf
+    ElseIf Manager == None && Settings
+        VB_Log.Trace("Listener: Manager not set; cannot dispatch orgasm", Settings, 2)
     EndIf
 EndFunction
 
-; Optional: start-of-orgasm hook
+; Optional: SexLab start hook (kept for future sequencing)
 Function OnSexLabHookStart(String eventName, String argStr, Float argNum, Form sender)
-    ; No-op for now, but keeping for future sequencing if needed
+    ; No-op for now
 EndFunction
 
-; ---------------------------
-; Vesselbound ModEvent Bridge
-; ---------------------------
+; -----------------------------------
+; Vesselbound ModEvent bridge handler
+; -----------------------------------
 ; EXPECTED PAYLOAD:
 ;   Int id = ModEvent.Create("Vesselbound_Orgasm")
 ;   if id
-;       ; PUSH ORDER MATTERS!
-;       ; The *last* pushed form becomes the "sender" param here.
-;       ModEvent.PushInt(id, flags)   ; (optional) bitfield — becomes argNum
-;       ModEvent.PushForm(id, akActor); becomes 'sender'
+;       ModEvent.PushInt(id, flags)   ; becomes argNum
+;       ModEvent.PushForm(id, actor)  ; becomes sender
 ;       ModEvent.Send(id)
 ;   endif
-;
-; FLAGS (optional suggestion):
-;   bit 0 (1): Aggressor
-;   bit 1 (2): Consensual
-;   bit 2 (4): Solo
-;
 Function OnVBOrgasm(String eventName, String argStr, Float argNum, Form sender)
     Actor akActor = sender as Actor
     If akActor == None
@@ -87,7 +80,9 @@ Function OnVBOrgasm(String eventName, String argStr, Float argNum, Form sender)
     If Manager
         Manager.OnOrgasm(akActor)
         If Settings
-            VB_Log.Trace("Listener: Dispatched ModEvent orgasm -> " + akActor + " (flags=" + argNum as Int + ")", Settings)
+            VB_Log.Trace("Listener: Dispatched ModEvent orgasm -> " + akActor + " (flags=" + (argNum as Int) + ")", Settings)
         EndIf
+    ElseIf Settings
+        VB_Log.Trace("Listener: Manager not set; dropping ModEvent orgasm for " + akActor, Settings, 2)
     EndIf
 EndFunction
