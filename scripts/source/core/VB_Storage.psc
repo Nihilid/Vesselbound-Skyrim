@@ -70,22 +70,37 @@ Int Function GetCascadeMaxCount()
 EndFunction
 
 Float Function GetCascadeDelayMin()
-    ; Ensure Min <= Max
     Float minV = CascadeDelayMin
     Float maxV = CascadeDelayMax
+    ; Ensure non-negative
+    If maxV < 0.0
+        maxV = 0.0
+    EndIf
+    If minV < 0.0
+        minV = 0.0
+    EndIf
+    ; Ensure Min <= Max
     If minV > maxV
         return maxV
     EndIf
-    return maxV >= 0.0 ? minV : 0.0
+    return minV
 EndFunction
 
 Float Function GetCascadeDelayMax()
     Float minV = CascadeDelayMin
     Float maxV = CascadeDelayMax
+    ; Ensure non-negative
+    If maxV < 0.0
+        maxV = 0.0
+    EndIf
+    If minV < 0.0
+        minV = 0.0
+    EndIf
+    ; Ensure Max >= Min
     If maxV < minV
         return minV
     EndIf
-    return maxV >= 0.0 ? maxV : 0.0
+    return maxV
 EndFunction
 
 ; ----- UX -----

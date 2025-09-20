@@ -1,6 +1,6 @@
 Scriptname VB_Feature_OIO extends Quest
 
-VB_Settings Property Settings Auto
+VB_Storage Property S Auto
 
 ; Entry point: called by FeatureManager after an orgasm
 Function HandleOrgasm(Actor akActor)

@@ -1,6 +1,6 @@
 Scriptname VB_FeatureManager extends Quest
 
-VB_Settings        Property Settings  Auto
+VB_Storage Property S Auto
 VB_Feature_OIO     Property OIO       Auto
 VB_Feature_Cascades Property Cascades Auto
 

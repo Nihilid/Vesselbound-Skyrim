@@ -1,6 +1,7 @@
 Scriptname VB_Feature_Cascades extends Quest
 
-VB_Settings Property Settings Auto
+VB_Storage Property S Auto
+
 Float Property CascadeDelayMin = 1.5 Auto ; seconds between cascades (feel free to expose via MCM later)
 Float Property CascadeDelayMax = 3.0 Auto
 
