@@ -3,7 +3,8 @@ The project’s guiding principles:
 - **Modular**: compatibility layers instead of patching external mods directly.
 - **Extensible**: all major features toggleable in MCM.
 - **Transparent collaboration**: clear repo baseline for GPT-assisted development.
-DO NOT USE ANY NON-ASCII SYMBOLS IN VS CODE.
+DO NOT USE ANY NON-ASCII SYMBOLS.
+UTILIZE BEST PRACTICE FOR SCRIPTING IN SKYRIM SSE.
 
 ---
 
