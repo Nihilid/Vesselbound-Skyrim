@@ -1,4 +1,4 @@
-; ============================== ; Vesselbound — Bridge: ODF ; File: source/bridge/odf_bridge.psc ; Notes: Stub bridge for Overlay Distribution Framework. ; Provides overlay application for Blessing of Burdens. ; ==============================
+; ============================== ; Vesselbound  Bridge: ODF ; File: source/bridge/odf_bridge.psc ; Notes: Stub bridge for Overlay Distribution Framework. ; Provides overlay application for Blessing of Burdens. ; ==============================
 
 Scriptname VB_Bridge_ODF Hidden
 

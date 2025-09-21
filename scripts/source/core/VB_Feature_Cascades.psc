@@ -19,7 +19,7 @@ Function HandleOrgasm(Actor akActor)
     EndIf
 
     VB_Log.Trace("Cascades: Starting chain (base " + baseChance + "%, cap " + maxHops + ") for " + akActor, Settings)
-    Settings.Notify("Climax Cascade starting…")
+    Settings.Notify("Climax Cascade starting")
 
     Int hop = 0
     While hop < maxHops

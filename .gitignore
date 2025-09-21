@@ -4,3 +4,5 @@
 /.vscode/
 Vesselbound.ppj
 SkyrimSE.code-workspace
+sanitize-papyrus.ps1
+build.ps1

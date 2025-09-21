@@ -1,4 +1,4 @@
-; ============================== ; Vesselbound — Bridge: SLO ; File: source/bridge/slo_bridge.psc ; Notes: Stub bridge for SexLab Aroused NG (SexLabAroused.esm). ; Provides arousal value queries for OIO scaling. ; ==============================
+; ============================== ; Vesselbound  Bridge: SLO ; File: source/bridge/slo_bridge.psc ; Notes: Stub bridge for SexLab Aroused NG (SexLabAroused.esm). ; Provides arousal value queries for OIO scaling. ; ==============================
 
 Scriptname VB_Bridge_SLO Hidden
 

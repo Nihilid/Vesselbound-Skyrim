@@ -1,4 +1,4 @@
-; ============================== ; Vesselbound — Bridge: FISS ; File: source/bridge/fiss_bridge.psc ; Notes: Stub bridge for FISS (File Access Interface for Skyrim Scripts). ; Provides placeholder functions for preset export/import until ; full FISS integration is added. ; ==============================
+; ============================== ; Vesselbound  Bridge: FISS ; File: source/bridge/fiss_bridge.psc ; Notes: Stub bridge for FISS (File Access Interface for Skyrim Scripts). ; Provides placeholder functions for preset export/import until ; full FISS integration is added. ; ==============================
 
 Scriptname VB_Bridge_FISS Hidden
 

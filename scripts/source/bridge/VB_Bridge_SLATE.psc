@@ -1,4 +1,4 @@
-; ============================== ; Vesselbound — Bridge: SLATE ; File: source/bridge/slate_bridge.psc ; Notes: Stub bridge for SLATE (SexLab Animation Tagging Extensions). ; Provides act/animation context queries for womb access gating. ; ==============================
+; ============================== ; Vesselbound  Bridge: SLATE ; File: source/bridge/slate_bridge.psc ; Notes: Stub bridge for SLATE (SexLab Animation Tagging Extensions). ; Provides act/animation context queries for womb access gating. ; ==============================
 
 Scriptname VB_Bridge_SLATE Hidden
 

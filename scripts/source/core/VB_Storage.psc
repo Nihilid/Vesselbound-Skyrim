@@ -1,7 +1,7 @@
 Scriptname VB_Storage extends Quest
 
 ; ================================
-; Vesselbound – Central Settings
+; Vesselbound  Central Settings
 ; ================================
 
 ; ---------- Feature Toggles ----------
@@ -9,11 +9,11 @@ Bool  Property OIOEnabled           = True  Auto
 Bool  Property CascadeEnabled       = True  Auto
 
 ; ---------- OIO (Orgasm-Induced Ovulation) ----------
-; Base chance 0.0–1.0
+; Base chance 0.01.0
 Float Property OIOBaseChance        = 0.25  Auto
 ; Force ovulation regardless of cycle checks
 Bool  Property OIOForceOvulation    = False Auto
-; Weight (0–1) for arousal influence (when SLO present)
+; Weight (01) for arousal influence (when SLO present)
 Float Property OIOArousalWeight     = 0.50  Auto
 ; Duration of ovulation (hours)
 Float Property OIODurationHours     = 24.0  Auto
@@ -26,7 +26,7 @@ Bool  Property HasSLO               = False Auto
 Bool  Property HasSLSO              = False Auto
 
 ; ---------- Climax Cascades ----------
-; Base chance 0.0–1.0
+; Base chance 0.01.0
 Float Property CascadeBaseChance    = 0.10  Auto
 Int   Property CascadeMaxCount      = 3     Auto
 Float Property CascadeDelayMin      = 1.5   Auto
